@@ -1,0 +1,116 @@
+{% extends 'shop/basic.html' %}
+
+{% block css %}
+<style>
+  .col-md-3 {
+    display: inline-block;
+    margin-left: -4px;
+  }
+
+  .carousel-indicators .active {
+    background-color: blue;
+  }
+
+  .col-md-3 img {
+    width: 250px;
+    height: 250px;
+  }
+
+  body .carousel-control-indicator li {
+    background-color: blue;
+  }
+
+  body .carousel-indicators {
+    bottom: 0;
+  }
+
+  body .carousel-control-prev-icon,
+  body .carousel-control-next-icon {
+    background-color: blue;
+  }
+
+  body .no-padding {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .carousel-control-prev,
+  .carousel-control-next {
+    padding-top: 200px;
+    top: auto;
+    bottom: auto;
+  }
+
+  .carousel-control-prev-icon {
+    background: black no-repeat center center;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23fff' viewBox='0 0 8 8'%3e%3cpath d=' M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3e%3c/svg%3e");
+  }
+
+  .carousel-control-next-icon {
+    background: black no-repeat center center;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23fff' viewBox='0 0 8 8'%3e%3cpath d=' M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3e%3c/svg%3e");
+  }
+</style>
+{% endblock %}
+
+{% block body %}
+{% load static %}
+<div class="container">
+
+  <!-- Slide show starts here -->
+  {% for products, range, nSlides in allprods %}
+
+  <h1 class="my-4"> {{products.0.category}} </h1>
+  <div class="row">
+    <div id="demo{{forloop.counter}}" class="col carousel slide my-3" data-ride="carousel">
+
+      <ul class="carousel-indicators">
+        <li data-bs-target="#demo{{forloop.counter}}" data-bs-slide-to="0" class="active"></li>
+        {% for i in range %}
+        <li data-bs-target="#demo{{forloop.parentloop.counter}}" data-bs-slide-to="{{i}}"></li>
+        {% endfor %}
+      </ul>
+
+      {% load utils %}
+
+      <div class="container carousel-inner no-padding">
+
+        <div class="carousel-item active">
+          {% for item in products %}
+          <div class="col-xs-3 col-sm-3 col-md-3">
+            <div class="card align-items-center" style="width: 251px;">
+              <img src='/media/{{item.image}}' class="card-img-top" alt="...">
+              <div class="card-body">
+                <h5 class="card-title">{{item.product_name}}</h5>
+                <p class="card-text">{{item.desc|slice:"0:60"}} {% if item.desc|length > 60 %} ... {% endif %} </p>
+                <button id="pr{{item.id}}" class="btn btn-primary cart">Add to Cart</button>
+                <a href="/shop/productview/{{item.id}}">
+                <button id="qv{{item.id}}" class="btn btn-primary cart">Quickview</button></a>
+              </div>
+            </div>
+          </div>
+          {% if forloop.counter|divisibleby:4 and not forloop.last %}
+          <!-- Move to next slide if current slide has 4 products -->
+        </div>
+        <div class="carousel-item">
+          {% endif %}
+          {% endfor %}
+        </div>
+
+      </div>
+
+    </div>
+
+    <a class="carousel-control-prev " href="#demo{{forloop.counter}}" role="button" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#demo{{forloop.counter}}" role="button" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="sr-only">Next</span>
+    </a>
+  </div>
+  {% endfor %}
+</div>
+
+{% endblock %}

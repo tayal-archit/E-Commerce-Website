@@ -1,0 +1,43 @@
+{% extends 'shop/basic.html' %}
+
+{% block title %} Contact Us {% endblock %}
+{% block body %}
+
+
+<form action="/shop/contact/" method="post"> {% csrf_token %}
+    <div class="container fluid">
+        <H1> Enter your Contact Info </H1>
+
+        <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name">
+        </div>
+
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com">
+        </div>
+
+        <div class="mb-3">
+            <label for="phone" class="form-label">Phone Number</label>
+            <input type="tel" class="form-control" id="phone" name="phone" placeholder="+91">
+        </div>
+
+        <div class="mb-3">
+            <label for="query" class="form-label">Query</label>
+            <textarea class="form-control" id="query" name="query" rows="3"
+                placeholder="Enter your Query and We will be Happy to Help!"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-success">Submit</button>
+    </div>
+</form>
+
+<div class="container my-3">
+    <h2> To get in Touch with Us: </h2>
+
+    <h5>Phone Number : +91 9643629636 <br>
+    Email Address : atayalwork@gmail.com</h5>
+</div>
+
+{% endblock %}
