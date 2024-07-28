@@ -41,3 +41,12 @@
 </div>
 
 {% endblock %}
+
+{% block js %}
+<script>
+    {% if thank %}
+    alert("Thank you for getting in thouch with us. Our team will revert to your query shortly.")
+    document.location="/shop";
+    {%endif%}
+</script>
+{% endblock %}
