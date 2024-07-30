@@ -38,7 +38,8 @@
             </div>
         </div>
         <form class="d-flex" role="search" method="get" action="/shop/search/">
-            <input class="form-control me-2" type="search" name="search" id="search" placeholder="Search" aria-label="Search">
+            <input class="form-control me-2" type="search" name="search" id="search" placeholder="Search"
+                aria-label="Search">
             <button class="btn btn-outline-success" type="submit">Search</button>
         </form>
 
@@ -46,8 +47,8 @@
             <button type="button" id="popcart" class="btn btn-secondary mx-2" data-bs-container="body"
                 data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="Go to Cart">
                 Cart(<span id="cart">0</span>)</button></a>
-        
-        <button class='btn btn-primary' onclick='clearCart()' id ='clearCart' style="width: 130px;">Clear Cart</button> 
+
+        <button class='btn btn-primary' onclick='clearCart()' id='clearCart' style="width: 130px;">Clear Cart</button>
 
     </nav>
     <!-- End of Nav Bar -->
@@ -67,6 +68,23 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 
     <script>
+        // Find out the cart items
+        if (localStorage.getItem('cart') == null) var cart = {};
+        else {
+            cart = JSON.parse(localStorage.getItem('cart'));
+            updatecart(cart);
+        }
+
+        // Update the UI with current cart items
+        function updatecart(cart) {
+            var sum = 0;
+            for (var item in cart) {
+                sum = sum + cart[item][0];
+                document.getElementById('div' + item).innerHTML = "<button id='minus" + item + "' class='btn btn-primary minus'>-</button>  <span id = 'val" + item + "''>" + cart[item][0] + "</span>  <button id='plus" + item + "' class='btn btn-primary plus'>+</button>";
+            };
+            localStorage.setItem('cart', JSON.stringify(cart));
+            document.getElementById('cart').innerHTML = sum;
+        }
         function clearCart() {
             cart = JSON.parse(localStorage.getItem('cart'));
             for (var item in cart) {
@@ -76,6 +94,39 @@
             cart = {};
             updatecart(cart);
         }
+
+        // Increment the cart items when user clicks on Add to cart or + icon button
+        $('.divpr').on('click', 'button.cart', function () {
+            var idstr = this.id.toString();
+            if (cart[idstr] != undefined) {
+                cart[idstr][0] = cart[idstr][0] + 1
+            }
+            else {
+                qty = 1;
+                name = document.getElementById('name' + idstr).innerHTML;
+                price = document.getElementById('price' + idstr).innerHTML;
+                cart[idstr] = [qty, name, parseInt(price)];
+            }
+            updatecart(cart);
+        });
+
+        //  Decrement cart items if - is clicked
+        $('.divpr').on("click", "button.minus", function () {
+            // Id is in the form "minuspr<id>" so slice from 5th index to get pr<id>
+            a = this.id.slice(5,);
+            if (cart[a][0] > 0) cart[a][0]--;
+            document.getElementById('val' + a).innerHTML = cart[a][0];
+            updatecart(cart);
+        });
+
+        // Increment cart items if + is clicked
+        $('.divpr').on("click", "button.plus", function () {
+            // Id is in the form "pluspr<id>" so slice from 4th index to get pr<id>
+            a = this.id.slice(4,);
+            cart[a][0]++;
+            document.getElementById('val' + a).innerHTML = cart[a][0];
+            updatecart(cart);
+        });
     </script>
 
     {% block js %} {% endblock %}
